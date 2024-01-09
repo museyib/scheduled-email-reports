@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        th, td
+        {
+            border-style: solid;
+            border-width: 1px 0;
+        }
+        .table {
+            border-collapse: collapse;
+            vertical-align: top;
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-width: 1px 0;
+            border-style: solid;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .margin-10 {
+            margin: 10px;
+        }
+
+        .d-inline
+        {
+            display: inline;
+        }
+
+        .font-normal
+        {
+            font-weight: normal;
+        }
+    </style>
+    <title>Report</title>
+</head>
+<body>
+<div class="margin-10">
+    <h2 th:text="${date}" class="d-inline"></h2>
+    <h2 class="font-normal d-inline"> tarixinə seçilmiş malların satış miqdarı və anbar qalığı</h2>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Mal kodu</th>
+        <th>Mal adı</th>
+        <th class="text-right">Satış</th>
+        <th class="text-right">Qalıq</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item:${data}">
+        <td th:utext="${item.invCode}"></td>
+        <td th:utext="${item.invName}"></td>
+        <td class="text-right" th:utext="${#numbers.formatDecimal(item.saleQty, 1, 0)}"></td>
+        <td class="text-right" th:utext="${#numbers.formatDecimal(item.whsQty, 1, 0)}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
