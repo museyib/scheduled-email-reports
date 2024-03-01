@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        th, td
+        {
+            border-style: solid;
+            border-width: 1px;
+        }
+        .table {
+            border-collapse: collapse;
+            vertical-align: top;
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-width: 1px 0;
+            border-style: solid;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .margin-10 {
+            margin: 10px;
+        }
+
+        .d-inline
+        {
+            display: inline;
+        }
+
+        .font-normal
+        {
+            font-weight: normal;
+        }
+    </style>
+    <title>Report</title>
+</head>
+<body>
+<div class="margin-10">
+    <h2 th:text="${date}" class="d-inline"></h2>
+    <h2 class="font-normal d-inline"> tarixində yığımdan silinmiş malların siyahısı</h2>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Sənəd nömrəsi</th>
+        <th>Mal kodu</th>
+        <th>Mal adı</th>
+        <th>Brend</th>
+        <th>Silinmiş say</th>
+        <th>Məbləğ</th>
+        <th>Qalıq</th>
+        <th>Anbar</th>
+        <th>Yığan</th>
+        <th>Yoxlayan</th>
+        <th>Silinmə səbəbi</th>
+        <th>Sifarişçi Anbar/Təmsilçi</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item:${data}">
+        <td th:utext="${item.trxNo}"></td>
+        <td th:utext="${item.invCode}"></td>
+        <td th:utext="${item.invName}"></td>
+        <td th:utext="${item.invBrand}"></td>
+        <td class="text-right" th:utext="${#numbers.formatDecimal(item.deletedQty, 1, 0)}"></td>
+        <td class="text-right" th:utext="${#numbers.formatDecimal(item.deletedAmount, 1, 2)}"></td>
+        <td class="text-right" th:utext="${#numbers.formatDecimal(item.whsQty, 1, 0)}"></td>
+        <td th:utext="${item.whsCode}"></td>
+        <td th:utext="${item.pickUser}"></td>
+        <td th:utext="${item.packUser}"></td>
+        <td th:utext="${item.notPickedReason}"></td>
+        <td th:utext="${item.target}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+<div class="margin-10">
+    <h2>Səbəblər üzrə yekun</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Səbəb</th>
+            <th>Sətir sayı</th>
+            <th>Silinmiş say</th>
+            <th>Məbləğ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item:${extra_data.entrySet()}">
+            <td th:utext="${item.getKey()}"></td>
+            <td class="text-right" th:utext="${item.getValue().itemCount}"></td>
+            <td class="text-right" th:utext="${item.getValue().totalQty}"></td>
+            <td class="text-right" th:utext="${#numbers.formatDecimal(item.getValue().totalAmount, 1, 2)}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

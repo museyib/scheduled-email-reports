@@ -1,6 +1,6 @@
 package az.inci.scheduledemalreports.service;
 
-import az.inci.scheduledemalreports.model.InvSaleStockReportData;
+import az.inci.scheduledemalreports.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class MailContentBuilder
+public class SaleStockReportBuilder implements ContentBuilder
 {
     private TemplateEngine templateEngine;
 
@@ -21,11 +21,12 @@ public class MailContentBuilder
         this.templateEngine = templateEngine;
     }
 
-    public String build(List<InvSaleStockReportData> data)
+    @Override
+    public <T extends ReportData> String build(List<T> data)
     {
         Context context = new Context();
         context.setVariable("date", LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
         context.setVariable("data", data);
-        return templateEngine.process("reports/mail-report", context);
+        return templateEngine.process("reports/sale-stock-report", context);
     }
 }

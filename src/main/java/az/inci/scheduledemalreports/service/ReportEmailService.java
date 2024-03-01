@@ -19,26 +19,21 @@ public class ReportEmailService
         this.mailSender = mailSender;
     }
 
-    public void  sendEmail(String content)
+    public void  sendEmail(String content, String title, Address[] recipients)
     {
         MimeMessagePreparator messagePreparator;
         try
         {
-            Address[] recipients = {
-                    new InternetAddress("mikayil.yusifov@inci.az"),
-                    new InternetAddress("isa.abbasov@inci.az")
-            };
             Address[] recipientsCC = {
                     new InternetAddress("museyib.alekber@inci.az"),
-                    new InternetAddress("museyib.cr@gmail.com"),
-//                    new InternetAddress("elnur.qasimov@inci.az")
+                    new InternetAddress("museyib.cr@gmail.com")
             };
-            String recipient = "museyib.alekber@inci.az";
+            String recipient = "museyib.cr@gmail.com";
 
             messagePreparator = (message) -> {
                 message.setRecipients(MimeMessage.RecipientType.TO, recipients);
                 message.setRecipients(MimeMessage.RecipientType.CC, recipientsCC);
-                message.setSubject("Günlük satış hesabatı", "UTF-8");
+                message.setSubject(title, "UTF-8");
                 message.setFrom("Inci Report Center <report@inci.az>");
                 message.setSender(new InternetAddress("report@inci.az"));
                 message.setContent(content, "text/html; charset=utf-8");
@@ -48,7 +43,7 @@ public class ReportEmailService
         catch(Exception e)
         {
             log.error(e.toString());
-            sendEmail(content);
+            sendEmail(content, title, recipients);
         }
     }
 }

@@ -3,7 +3,7 @@ package az.inci.scheduledemalreports.model;
 import lombok.Data;
 
 @Data
-public class InvSaleStockReportData
+public class InvSaleStockReportData implements ReportData
 {
     private String invCode;
     private String invName;
