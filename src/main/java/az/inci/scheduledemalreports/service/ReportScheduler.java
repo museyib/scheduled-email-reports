@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReportScheduler
 {
-    private final ReportEmailService emailService;
+    private final MailService mailService;
     private final SaleStockReportBuilder saleStockReportBuilder;
     private final SaleStockReportService saleStockReportService;
     private final DeletedLinesReportBuilder deletedLinesReportBuilder;
@@ -25,7 +25,7 @@ public class ReportScheduler
                 new InternetAddress("isa.abbasov@inci.az")
         };
         String title = "Günlük satış hesabatı";
-        emailService.sendEmail(saleStockReportBuilder.build(saleStockReportService.getReportData()), title, recipients);
+        mailService.sendEmail(saleStockReportBuilder.build(saleStockReportService.getReportData()), title, recipients);
     }
 
     @Scheduled(cron = "0 10 21 * * *")
@@ -37,6 +37,6 @@ public class ReportScheduler
                 new InternetAddress("elnur.qasimov@inci.az")
         };
         String title = "Gün ərzində yığımda azaldılmış/silinmiş mallar";
-        emailService.sendEmail(deletedLinesReportBuilder.build(deletedLinesFromPickingService.getReportData()), title, recipients);
+        mailService.sendEmail(deletedLinesReportBuilder.build(deletedLinesFromPickingService.getReportData()), title, recipients);
     }
 }

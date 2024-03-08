@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class ReportEmailService
+public class MailService
 {
     private final JavaMailSender mailSender;
 
-    public ReportEmailService(JavaMailSender mailSender)
+    public MailService(JavaMailSender mailSender)
     {
         this.mailSender = mailSender;
     }
