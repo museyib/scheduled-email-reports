@@ -1,5 +1,10 @@
 package az.inci.scheduledemalreports.service;
 
+import az.inci.scheduledemalreports.service.DeletedLinesFromPickingService;
+import az.inci.scheduledemalreports.service.MailService;
+import az.inci.scheduledemalreports.service.SaleStockReportService;
+import az.inci.scheduledemalreports.service.builder.DeletedLinesReportBuilder;
+import az.inci.scheduledemalreports.service.builder.SaleStockReportBuilder;
 import jakarta.mail.Address;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
@@ -34,7 +39,8 @@ public class ReportScheduler
         Address[] recipients = {
                 new InternetAddress("mikayil.yusifov@inci.az"),
                 new InternetAddress("isa.abbasov@inci.az"),
-                new InternetAddress("elnur.qasimov@inci.az")
+                new InternetAddress("elnur.qasimov@inci.az"),
+                new InternetAddress("ramil.quliyev@inci.az")
         };
         String title = "Gün ərzində yığımda azaldılmış/silinmiş mallar";
         mailService.sendEmail(deletedLinesReportBuilder.build(deletedLinesFromPickingService.getReportData()), title, recipients);

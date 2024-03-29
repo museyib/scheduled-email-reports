@@ -1,4 +1,4 @@
-package az.inci.scheduledemalreports.service;
+package az.inci.scheduledemalreports.service.builder;
 
 import az.inci.scheduledemalreports.model.DeletedLinesFromPickingData;
 import az.inci.scheduledemalreports.model.DeletedLinesFromPickingData.ExtraDataDetails;
@@ -10,10 +10,7 @@ import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DeletedLinesReportBuilder implements ContentBuilder
@@ -29,12 +26,13 @@ public class DeletedLinesReportBuilder implements ContentBuilder
     @Override
     public <T extends ReportData> String build(List<T> data)
     {
-        data.sort(Comparator.comparing(o -> ((DeletedLinesFromPickingData) o).getNotPickedReason()));
-        Map<String, ExtraDataDetails> extraData = new HashMap<>();
+        Map<String, ExtraDataDetails> extraData = new TreeMap<>();
+        Map<String, List<DeletedLinesFromPickingData>> mappedData = new TreeMap<>();
         for(T item: data)
         {
             DeletedLinesFromPickingData pickingData = (DeletedLinesFromPickingData) item;
             String reason = pickingData.getNotPickedReason().isEmpty() ? "{səbəb təyin edilməyib}" : pickingData.getNotPickedReason();
+            String whsCode = pickingData.getWhsCode();
             if(extraData.containsKey(reason))
             {
                 ExtraDataDetails details = extraData.get(reason);
@@ -50,11 +48,23 @@ public class DeletedLinesReportBuilder implements ContentBuilder
                 details.setTotalAmount(pickingData.getDeletedAmount());
                 extraData.put(reason, details);
             }
+
+            if (mappedData.containsKey(whsCode))
+            {
+                List<DeletedLinesFromPickingData> dataList = mappedData.get(whsCode);
+                dataList.add(pickingData);
+            }
+            else
+            {
+                List<DeletedLinesFromPickingData> dataList = new ArrayList<>();
+                dataList.add(pickingData);
+                mappedData.put(whsCode, dataList);
+            }
         }
 
         Context context = new Context();
         context.setVariable("date", LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-        context.setVariable("data", data);
+        context.setVariable("mapped_data", mappedData);
         context.setVariable("extra_data", extraData);
         return templateEngine.process("reports/deleted-lines-from-picking-report", context);
     }

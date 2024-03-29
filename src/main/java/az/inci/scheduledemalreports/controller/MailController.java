@@ -4,7 +4,6 @@ import az.inci.scheduledemalreports.model.MailRequest;
 import az.inci.scheduledemalreports.model.Response;
 import az.inci.scheduledemalreports.service.MailService;
 import jakarta.mail.Address;
-import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +26,11 @@ public class MailController
     {
         try
         {
-            Address[] recipients = new Address[request.getRecipients().length];
+            String[] addresses = request.getRecipients().split(" ");
+            Address[] recipients = new Address[addresses.length];
             for(int i = 0; i < recipients.length; i++)
             {
-                recipients[i] = new InternetAddress(request.getRecipients()[i]);
+                recipients[i] = new InternetAddress(addresses[i]);
             }
 
             mailService.sendEmail(request.getContent(), request.getTitle(), recipients);

@@ -1,4 +1,4 @@
-package az.inci.scheduledemalreports.service;
+package az.inci.scheduledemalreports.service.builder;
 
 import az.inci.scheduledemalreports.model.ReportData;
 

@@ -26,6 +26,10 @@
             margin: 10px;
         }
 
+        .bottom-margin-10 {
+            margin-bottom: 20px !important;
+        }
+
         .d-inline
         {
             display: inline;
@@ -40,43 +44,44 @@
 </head>
 <body>
 <div class="margin-10">
-    <h2 th:text="${date}" class="d-inline"></h2>
-    <h2 class="font-normal d-inline"> tarixində yığımdan silinmiş malların siyahısı</h2>
+    <h1 th:text="${date}" class="d-inline"></h1>
+    <h1 class="font-normal d-inline"> tarixində yığımdan silinmiş malların siyahısı</h1>
 </div>
-<table class="table">
-    <thead>
-    <tr>
-        <th>Sənəd nömrəsi</th>
-        <th>Mal kodu</th>
-        <th>Mal adı</th>
-        <th>Brend</th>
-        <th>Silinmiş say</th>
-        <th>Məbləğ</th>
-        <th>Qalıq</th>
-        <th>Anbar</th>
-        <th>Yığan</th>
-        <th>Yoxlayan</th>
-        <th>Silinmə səbəbi</th>
-        <th>Sifarişçi Anbar/Təmsilçi</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item:${data}">
-        <td th:utext="${item.trxNo}"></td>
-        <td th:utext="${item.invCode}"></td>
-        <td th:utext="${item.invName}"></td>
-        <td th:utext="${item.invBrand}"></td>
-        <td class="text-right" th:utext="${#numbers.formatDecimal(item.deletedQty, 1, 0)}"></td>
-        <td class="text-right" th:utext="${#numbers.formatDecimal(item.deletedAmount, 1, 2)}"></td>
-        <td class="text-right" th:utext="${#numbers.formatDecimal(item.whsQty, 1, 0)}"></td>
-        <td th:utext="${item.whsCode}"></td>
-        <td th:utext="${item.pickUser}"></td>
-        <td th:utext="${item.packUser}"></td>
-        <td th:utext="${item.notPickedReason}"></td>
-        <td th:utext="${item.target}"></td>
-    </tr>
-    </tbody>
-</table>
+<div th:each="data:${mapped_data.entrySet()}">
+    <h2 th:text="${data.getKey()} + ' anbarı'"></h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Sənəd nömrəsi</th>
+            <th>Mal kodu</th>
+            <th>Mal adı</th>
+            <th>Brend</th>
+            <th>Silinmiş say</th>
+            <th>Məbləğ</th>
+            <th>Qalıq</th>
+            <th>Yığan</th>
+            <th>Yoxlayan</th>
+            <th>Silinmə səbəbi</th>
+            <th>Sifarişçi Anbar/Təmsilçi</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item:${data.getValue()}">
+            <td th:utext="${item.trxNo}"></td>
+            <td th:utext="${item.invCode}"></td>
+            <td th:utext="${item.invName}"></td>
+            <td th:utext="${item.invBrand}"></td>
+            <td class="text-right" th:utext="${#numbers.formatDecimal(item.deletedQty, 1, 0)}"></td>
+            <td class="text-right" th:utext="${#numbers.formatDecimal(item.deletedAmount, 1, 2)}"></td>
+            <td class="text-right" th:utext="${#numbers.formatDecimal(item.whsQty, 1, 0)}"></td>
+            <td th:utext="${item.pickUser}"></td>
+            <td th:utext="${item.packUser}"></td>
+            <td th:utext="${item.notPickedReason}"></td>
+            <td th:utext="${item.target}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 
 <div class="margin-10">
