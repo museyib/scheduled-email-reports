@@ -2,6 +2,9 @@ package az.inci.scheduledemalreports.model;
 
 import lombok.Data;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 @Data
 public class DeletedLinesFromPickingData implements ReportData
 {
@@ -28,6 +31,7 @@ public class DeletedLinesFromPickingData implements ReportData
         private int itemCount;
         private double totalQty;
         private double totalAmount;
+        private Map<String, Integer> whsItemCount;
 
         public void incrementCount()
         {

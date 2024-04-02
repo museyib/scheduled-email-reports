@@ -90,7 +90,10 @@
         <thead>
         <tr>
             <th>Səbəb</th>
-            <th>Sətir sayı</th>
+            <th>Sətir sayı (Cəm)</th>
+            <th th:each="item:${mapped_data.entrySet()}">
+                <span th:text="'Sətir sayı (' + ${item.getKey()} + ')'"></span>
+            </th>
             <th>Silinmiş say</th>
             <th>Məbləğ</th>
         </tr>
@@ -99,6 +102,9 @@
         <tr th:each="item:${extra_data.entrySet()}">
             <td th:utext="${item.getKey()}"></td>
             <td class="text-right" th:utext="${item.getValue().itemCount}"></td>
+            <td class="text-right"  th:each="item:${item.getValue().getWhsItemCount()}">
+                <span th:utext="${item.getValue()}"></span>
+            </td>
             <td class="text-right" th:utext="${item.getValue().totalQty}"></td>
             <td class="text-right" th:utext="${#numbers.formatDecimal(item.getValue().totalAmount, 1, 2)}"></td>
         </tr>

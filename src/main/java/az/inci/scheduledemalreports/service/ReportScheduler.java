@@ -40,7 +40,8 @@ public class ReportScheduler
                 new InternetAddress("mikayil.yusifov@inci.az"),
                 new InternetAddress("isa.abbasov@inci.az"),
                 new InternetAddress("elnur.qasimov@inci.az"),
-                new InternetAddress("ramil.quliyev@inci.az")
+                new InternetAddress("ramil.quliyev@inci.az"),
+                new InternetAddress("seltenet.bagirova@inci.az")
         };
         String title = "Gün ərzində yığımda azaldılmış/silinmiş mallar";
         mailService.sendEmail(deletedLinesReportBuilder.build(deletedLinesFromPickingService.getReportData()), title, recipients);

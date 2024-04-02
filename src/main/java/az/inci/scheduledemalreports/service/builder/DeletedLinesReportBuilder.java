@@ -28,6 +28,7 @@ public class DeletedLinesReportBuilder implements ContentBuilder
     {
         Map<String, ExtraDataDetails> extraData = new TreeMap<>();
         Map<String, List<DeletedLinesFromPickingData>> mappedData = new TreeMap<>();
+
         for(T item: data)
         {
             DeletedLinesFromPickingData pickingData = (DeletedLinesFromPickingData) item;
@@ -36,16 +37,23 @@ public class DeletedLinesReportBuilder implements ContentBuilder
             if(extraData.containsKey(reason))
             {
                 ExtraDataDetails details = extraData.get(reason);
+                Map<String, Integer> whsItemCount = details.getWhsItemCount();
                 details.incrementCount();
                 details.setTotalQty(details.getTotalQty() + pickingData.getDeletedQty());
                 details.setTotalAmount(details.getTotalAmount() + pickingData.getDeletedAmount());
+
+                if (whsItemCount.containsKey(whsCode))
+                {
+                    whsItemCount.put(whsCode, whsItemCount.get(whsCode) + 1);
+                }
+                else
+                {
+                    whsItemCount.put(whsCode, 1);
+                }
             }
             else
             {
-                ExtraDataDetails details = new ExtraDataDetails();
-                details.setItemCount(1);
-                details.setTotalQty(pickingData.getDeletedQty());
-                details.setTotalAmount(pickingData.getDeletedAmount());
+                ExtraDataDetails details = getExtraDataDetails(data, whsCode, pickingData);
                 extraData.put(reason, details);
             }
 
@@ -67,5 +75,31 @@ public class DeletedLinesReportBuilder implements ContentBuilder
         context.setVariable("mapped_data", mappedData);
         context.setVariable("extra_data", extraData);
         return templateEngine.process("reports/deleted-lines-from-picking-report", context);
+    }
+
+    private static <T extends ReportData> ExtraDataDetails getExtraDataDetails(List<T> data, String whsCode, DeletedLinesFromPickingData pickingData) {
+        Map<String, Integer> tmpWhsItemCount = new TreeMap<>();
+        for(T tmpItem: data) {
+            DeletedLinesFromPickingData tmpPickingData = (DeletedLinesFromPickingData) tmpItem;
+            String tmpWhsCode = tmpPickingData.getWhsCode();
+            tmpWhsItemCount.put(tmpWhsCode, 0);
+        }
+
+
+        if (tmpWhsItemCount.containsKey(whsCode))
+        {
+            tmpWhsItemCount.put(whsCode, tmpWhsItemCount.get(whsCode) + 1);
+        }
+        else
+        {
+            tmpWhsItemCount.put(whsCode, 1);
+        }
+
+        ExtraDataDetails details = new ExtraDataDetails();
+        details.setWhsItemCount(tmpWhsItemCount);
+        details.setItemCount(1);
+        details.setTotalQty(pickingData.getDeletedQty());
+        details.setTotalAmount(pickingData.getDeletedAmount());
+        return details;
     }
 }
