@@ -1,7 +1,6 @@
 package az.inci.scheduledemalreports.service;
 
 import az.inci.scheduledemalreports.model.DeletedLinesFromPickingData;
-import az.inci.scheduledemalreports.model.InvSaleStockReportData;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +19,22 @@ public class DeletedLinesFromPickingService extends AbstractService
                      declare @start datetime=cast(getdate() as date), @end datetime=getdate()
                      exec dbo.SP_DELETED_INVENTORY_BY_DETAILS @start, @end,'*'""");
 
+        return getDeletedLinesFromPickingData(reportData, query);
+    }
+
+    public List<DeletedLinesFromPickingData> getReportDataForSbe(String sbeList)
+    {
+        List<DeletedLinesFromPickingData> reportData = new ArrayList<>();
+
+        Query query = entityManager.createNativeQuery("""
+                     declare @start datetime=cast(getdate() as date), @end datetime=getdate()
+                     exec dbo.SP_DELETED_INVENTORY_BY_DETAILS_FOR_STORE @start, @end, :SBE_LIST""");
+        query.setParameter("SBE_LIST", sbeList);
+
+        return getDeletedLinesFromPickingData(reportData, query);
+    }
+
+    private List<DeletedLinesFromPickingData> getDeletedLinesFromPickingData(List<DeletedLinesFromPickingData> reportData, Query query) {
         List<Object[]> resultList = query.getResultList();
 
         for (Object[] result : resultList)
