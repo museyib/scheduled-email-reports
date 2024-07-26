@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        th, td
+        {
+            border-style: solid;
+            border-width: 1px 0;
+            padding: 0 10px;
+        }
+        .table {
+            border-collapse: collapse;
+            vertical-align: top;
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-width: 1px 0;
+            border-style: solid;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .margin-10 {
+            margin: 10px;
+        }
+
+        .d-inline
+        {
+            display: inline;
+        }
+
+        .font-normal
+        {
+            font-weight: normal;
+        }
+    </style>
+    <title>Report</title>
+</head>
+<body>
+<div class="margin-10">
+    <h2 th:text="${date}" class="d-inline"></h2>
+    <h2 class="font-normal d-inline"> tarixinə alınmış mallar</h2>
+</div>
+
+<br>
+<h2>Ümumi</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Məbləğ</th>
+        <th>Məbləğ (Əvvəlki qiymətlə)</th>
+        <th>Məbləğ fərqi</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="text-center" th:utext="${#numbers.formatDecimal(generalTotal.amount, 1, 2)}"></td>
+        <td class="text-center" th:utext="${#numbers.formatDecimal(generalTotal.amountWithOldPrice, 1, 2)}"></td>
+        <td class="text-center" th:utext="${#numbers.formatDecimal(generalTotal.amountDifference, 1, 2)}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<h2>Qiyməti artan mallar</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>Mal kodu</th>
+        <th>Mal adı</th>
+        <th>Miqdar</th>
+        <th>Qiymət</th>
+        <th>Məbləğ</th>
+        <th>Əvvəlki qiymət</th>
+        <th>Məbləğ (Əvvəlki qiymətlə)</th>
+        <th>Məbləğ fərqi</th>
+        <th>Əvvəlki adı</th>
+        <th>Əvvəlki alış tarixi</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item, iStat:${incrementData}">
+        <td th:utext="${iStat.count}"></td>
+        <td th:utext="${item.invCode}"></td>
+        <td th:utext="${item.invName}"></td>
+        <td class="text-right" th:utext="${#numbers.formatDecimal(item.qty, 1, 0)}"></td>
+        <td class="text-right" th:utext="${item.price}"></td>
+        <td class="text-right" th:utext="${item.amount}"></td>
+        <td class="text-right" th:utext="${item.oldPrice}"></td>
+        <td class="text-right" th:utext="${item.amountWithOldPrice}"></td>
+        <td class="text-right" th:utext="${item.amountDifference}"></td>
+        <td th:utext="${item.oldName}"></td>
+        <td th:utext="${item.getOldTrxDate()}"></td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th class="text-right">Yekun</th>
+        <th class="text-right" th:utext="${#numbers.formatDecimal(incrementTotal.amount, 1, 2)}"></th>
+        <th></th>
+        <th class="text-right" th:utext="${#numbers.formatDecimal(incrementTotal.amountWithOldPrice, 1, 2)}"></th>
+        <th class="text-right" th:utext="${#numbers.formatDecimal(incrementTotal.amountDifference, 1, 2)}"></th>
+    </tr>
+    </tfoot>
+</table>
+
+<br>
+<h2>Qiyməti azalan mallar</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>Mal kodu</th>
+        <th>Mal adı</th>
+        <th>Miqdar</th>
+        <th>Qiymət</th>
+        <th>Məbləğ</th>
+        <th>Əvvəlki qiymət</th>
+        <th>Məbləğ (Əvvəlki qiymətlə)</th>
+        <th>Məbləğ fərqi</th>
+        <th>Əvvəlki adı</th>
+        <th>Əvvəlki alış tarixi</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item, iStat:${decrementData}">
+        <td th:utext="${iStat.count}"></td>
+        <td th:utext="${item.invCode}"></td>
+        <td th:utext="${item.invName}"></td>
+        <td class="text-right" th:utext="${#numbers.formatDecimal(item.qty, 1, 0)}"></td>
+        <td class="text-right" th:utext="${item.price}"></td>
+        <td class="text-right" th:utext="${item.amount}"></td>
+        <td class="text-right" th:utext="${item.oldPrice}"></td>
+        <td class="text-right" th:utext="${item.amountWithOldPrice}"></td>
+        <td class="text-right" th:utext="${item.amountDifference}"></td>
+        <td th:utext="${item.oldName}"></td>
+        <td th:utext="${item.getOldTrxDate()}"></td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th class="text-right">Yekun</th>
+        <th class="text-right" th:utext="${#numbers.formatDecimal(decrementTotal.amount, 1, 2)}"></th>
+        <th></th>
+        <th class="text-right" th:utext="${#numbers.formatDecimal(decrementTotal.amountWithOldPrice, 1, 2)}"></th>
+        <th class="text-right" th:utext="${#numbers.formatDecimal(decrementTotal.amountDifference, 1, 2)}"></th>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>

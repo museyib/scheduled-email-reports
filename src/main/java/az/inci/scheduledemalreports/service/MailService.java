@@ -26,7 +26,7 @@ public class MailService
         {
             Address[] recipientsCC = {
                     new InternetAddress("museyib.alekber@inci.az"),
-                    new InternetAddress("museyib.cr@gmail.com")
+//                    new InternetAddress("isa.abbasov@inci.az"),
             };
             String recipient = "museyib.cr@gmail.com";
 

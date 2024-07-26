@@ -8,12 +8,10 @@ import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
-public class ReturnsFromPOSReportBuilder implements ContentBuilder
-{
+public class RestoredPricesReportBuilder implements ContentBuilder {
     private TemplateEngine templateEngine;
 
     @Autowired
@@ -23,11 +21,10 @@ public class ReturnsFromPOSReportBuilder implements ContentBuilder
     }
 
     @Override
-    public <T extends ReportData> String build(List<T> data)
-    {
+    public <T extends ReportData> String build(List<T> data) {
         Context context = new Context();
-        context.setVariable("date", LocalDate.now().plusDays(-1).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
         context.setVariable("data", data);
-        return templateEngine.process("reports/returns-from-pos", context);
+        context.setVariable("date", LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+        return templateEngine.process("reports/restored-prices", context);
     }
 }

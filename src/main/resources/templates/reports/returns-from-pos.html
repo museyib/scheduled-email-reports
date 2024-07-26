@@ -46,29 +46,27 @@
 <body>
 <div class="margin-10">
     <h2 th:text="${date}" class="d-inline"></h2>
-    <h2 class="font-normal d-inline"> tarixinə seçilmiş malların satış miqdarı və anbar qalığı</h2>
+    <h2 class="font-normal d-inline"> tarixinə POS-dan qaytarılmış mallar</h2>
 </div>
-<div th:each="group:${data}">
-    <br>
-    <h2 th:text="${group.groupName}"></h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Mal kodu</th>
-            <th>Mal adı</th>
-            <th class="text-right">Satış</th>
-            <th class="text-right">Qalıq</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item:${group.reportData}">
-            <td th:utext="${item.invCode}"></td>
-            <td th:utext="${item.invName}"></td>
-            <td class="text-right" th:utext="${#numbers.formatDecimal(item.saleQty, 1, 0)}"></td>
-            <td class="text-right" th:utext="${#numbers.formatDecimal(item.whsQty, 1, 0)}"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Mal kodu</th>
+        <th>Mal adı</th>
+        <th>Miqdar</th>
+        <th>Əməliyyat vaxtı</th>
+        <th>Mağaza</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item:${data}">
+        <td th:utext="${item.invCode}"></td>
+        <td th:utext="${item.invName}"></td>
+        <td th:utext="${#numbers.formatDecimal(item.qty, 1, 0)}"></td>
+        <td class="text-right" th:utext="${item.trxDate}"></td>
+        <td class="text-right" th:utext="${item.store}"></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

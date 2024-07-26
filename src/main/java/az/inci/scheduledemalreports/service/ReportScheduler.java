@@ -1,10 +1,8 @@
 package az.inci.scheduledemalreports.service;
 
-import az.inci.scheduledemalreports.model.Recipient;
+import az.inci.scheduledemalreports.model.*;
 import az.inci.scheduledemalreports.repository.RecipientRepository;
-import az.inci.scheduledemalreports.service.builder.DeletedLinesReportBuilder;
-import az.inci.scheduledemalreports.service.builder.ReturnsFromPOSReportBuilder;
-import az.inci.scheduledemalreports.service.builder.SaleStockReportBuilder;
+import az.inci.scheduledemalreports.service.builder.*;
 import jakarta.mail.Address;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
@@ -25,6 +23,10 @@ public class ReportScheduler
     private final DeletedLinesFromPickingService deletedLinesFromPickingService;
     private final ReturnsFromPOSReportBuilder returnsFromPOSReportBuilder;
     private final ReturnsFromPOSReportService returnsFromPosReportService;
+    private final PurchaseReportBuilder purchaseReportBuilder;
+    private final PurchaseReportService purchaseReportService;
+    private final RestoredPricesReportBuilder restoredPricesReportBuilder;
+    private final RestoredPricesReportService restoredPricesReportService;
     private final RecipientRepository recipientRepository;
 
     @Scheduled(cron = "0 0 21 * * *")
@@ -43,36 +45,67 @@ public class ReportScheduler
     {
         Address[] recipients = {
                 new InternetAddress("mikayil.yusifov@inci.az"),
+                new InternetAddress("israil.yusifov@inci.az"),
                 new InternetAddress("isa.abbasov@inci.az"),
                 new InternetAddress("elnur.qasimov@inci.az"),
                 new InternetAddress("ramil.quliyev@inci.az"),
                 new InternetAddress("seltenet.bagirova@inci.az")
         };
         String title = "Gün ərzində yığımda azaldılmış/silinmiş mallar";
-        mailService.sendEmail(deletedLinesReportBuilder.build(deletedLinesFromPickingService.getReportData()), title, recipients);
+        List<DeletedLinesFromPickingData> reportData = deletedLinesFromPickingService.getReportData();
+        if (!reportData.isEmpty())
+            mailService.sendEmail(deletedLinesReportBuilder.build(reportData), title, recipients);
     }
 
     @Scheduled(cron = "0 20 21 * * *")
-    public void sendReport3() throws AddressException
-    {
+    public void sendReport3() {
         List<Recipient> recipientList = recipientRepository.findAll();
         Address[] recipients = new Address[1];
         String title = "Gün ərzində yığımda azaldılmış/silinmiş mallar";
         for (Recipient recipient : recipientList) {
-            recipients[0] = new InternetAddress(recipient.getEmail());
-            mailService.sendEmail(deletedLinesReportBuilder.build(deletedLinesFromPickingService.getReportDataForSbe(recipient.getManagerCode())), title, recipients);
+            List<DeletedLinesFromPickingData> reportData = deletedLinesFromPickingService.getReportDataForSbe(recipient.getManagerCode());
+            if (!reportData.isEmpty())
+                mailService.sendEmail(deletedLinesReportBuilder.build(reportData), title, recipients);
         }
     }
 
     @Scheduled(cron = "0 0 7 * * *")
-    public void sendReport4() throws AddressException
-    {
+    public void sendReport4() {
         List<Recipient> recipientList = recipientRepository.findAll();
         Address[] recipients = new Address[1];
         String title = "Gün ərzində POS-dan qaytarılmış mallar";
         for (Recipient recipient : recipientList) {
-            recipients[0] = new InternetAddress(recipient.getEmail());
-            mailService.sendEmail(returnsFromPOSReportBuilder.build(returnsFromPosReportService.getReportData(recipient.getManagerCode())), title, recipients);
+            List<ReturnsFromPOSData> reportData = returnsFromPosReportService.getReportData(recipient.getManagerCode());
+            if (!reportData.isEmpty())
+                mailService.sendEmail(returnsFromPOSReportBuilder.build(reportData), title, recipients);
         }
+    }
+
+//    @Scheduled(cron = "0 30 21 * * *")
+    public void sendReport5() throws AddressException
+    {
+        Address[] recipients = {
+                new InternetAddress("mikayil.yusifov@inci.az"),
+                new InternetAddress("israil.yusifov@inci.az"),
+                new InternetAddress("isa.abbasov@inci.az"),
+                new InternetAddress("elnur.qasimov@inci.az")
+        };
+        String title = "Gün ərzində alınmış mallar";
+        List<PurchaseReportData> reportData = purchaseReportService.getReportData();
+        if (!reportData.isEmpty())
+            mailService.sendEmail(purchaseReportBuilder.build(reportData), title, recipients);
+    }
+
+    @Scheduled(cron = "0 10 7 * * *")
+    public void sendReport6() throws AddressException
+    {
+        Address[] recipients = {
+                new InternetAddress("ilkin.rufullayev@inci.az"),
+                new InternetAddress("elnur.qasimov@inci.az")
+        };
+        String title = "Vaxtı bitmiş endirimli qiymətlər";
+        List<RestoredPriceData> reportData = restoredPricesReportService.getReportData();
+        if (!reportData.isEmpty())
+            mailService.sendEmail(restoredPricesReportBuilder.build(reportData), title, recipients);
     }
 }
