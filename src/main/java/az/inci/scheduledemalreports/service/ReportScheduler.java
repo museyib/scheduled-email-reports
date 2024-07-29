@@ -58,11 +58,12 @@ public class ReportScheduler
     }
 
     @Scheduled(cron = "0 20 21 * * *")
-    public void sendReport3() {
+    public void sendReport3() throws AddressException {
         List<Recipient> recipientList = recipientRepository.findAll();
         Address[] recipients = new Address[1];
         String title = "Gün ərzində yığımda azaldılmış/silinmiş mallar";
         for (Recipient recipient : recipientList) {
+            recipients[0] = new InternetAddress(recipient.getEmail());
             List<DeletedLinesFromPickingData> reportData = deletedLinesFromPickingService.getReportDataForSbe(recipient.getManagerCode());
             if (!reportData.isEmpty())
                 mailService.sendEmail(deletedLinesReportBuilder.build(reportData), title, recipients);
@@ -70,11 +71,12 @@ public class ReportScheduler
     }
 
     @Scheduled(cron = "0 0 7 * * *")
-    public void sendReport4() {
+    public void sendReport4() throws AddressException {
         List<Recipient> recipientList = recipientRepository.findAll();
         Address[] recipients = new Address[1];
         String title = "Gün ərzində POS-dan qaytarılmış mallar";
         for (Recipient recipient : recipientList) {
+            recipients[0] = new InternetAddress(recipient.getEmail());
             List<ReturnsFromPOSData> reportData = returnsFromPosReportService.getReportData(recipient.getManagerCode());
             if (!reportData.isEmpty())
                 mailService.sendEmail(returnsFromPOSReportBuilder.build(reportData), title, recipients);
