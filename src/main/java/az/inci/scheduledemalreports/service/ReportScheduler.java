@@ -101,11 +101,14 @@ public class ReportScheduler
     @Scheduled(cron = "0 10 7 * * *")
     public void sendReport6() throws AddressException
     {
-        Address[] recipients = {
-                new InternetAddress("ilkin.rufullayev@inci.az"),
-                new InternetAddress("elnur.qasimov@inci.az")
-        };
+        List<Recipient> recipientList = recipientRepository.findAll();
+        Address[] recipients = new Address[recipientList.size() + 1];
         String title = "Vaxtı bitmiş endirimli qiymətlər";
+        recipients[0] = new InternetAddress("elnur.qasimov@inci.az");
+        for (int i = 0; i < recipientList.size(); i++) {
+            Recipient recipient = recipientList.get(i);
+            recipients[i + 1] = new InternetAddress(recipient.getEmail());
+        }
         List<RestoredPriceData> reportData = restoredPricesReportService.getReportData();
         if (!reportData.isEmpty())
             mailService.sendEmail(restoredPricesReportBuilder.build(reportData), title, recipients);
