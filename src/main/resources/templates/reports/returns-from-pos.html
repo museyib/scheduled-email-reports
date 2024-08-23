@@ -62,9 +62,9 @@
     <tr th:each="item:${data}">
         <td th:utext="${item.invCode}"></td>
         <td th:utext="${item.invName}"></td>
-        <td th:utext="${#numbers.formatDecimal(item.qty, 1, 0)}"></td>
-        <td class="text-right" th:utext="${item.trxDate}"></td>
-        <td class="text-right" th:utext="${item.store}"></td>
+        <td class="text-center" th:utext="${#numbers.formatDecimal(item.qty, 1, 0)}"></td>
+        <td th:utext="${item.trxDate}"></td>
+        <td th:utext="${item.store}"></td>
     </tr>
     </tbody>
 </table>
