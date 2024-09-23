@@ -44,24 +44,24 @@ public class DeletedLinesFromPickingService extends AbstractService
             data.setInvCode(String.valueOf(result[2]));
             data.setInvName(String.valueOf(result[3]));
             data.setInvBrand(String.valueOf(result[4]));
-            data.setDeletedQty(Double.parseDouble(String.valueOf(result[5])));
-            data.setDeletedAmount(Double.parseDouble(String.valueOf(result[6])));
-            data.setWhsCode(String.valueOf(result[8]));
-            data.setWhsQty(Double.parseDouble(String.valueOf(result[9])));
-            data.setBpCode(String.valueOf(result[11]));
-            data.setBpName(String.valueOf(result[12]));
-            String sbeCode = String.valueOf(result[13]);
-            String sbeName = String.valueOf(result[14]);
-            String targetWhs = String.valueOf(result[15]);
+            data.setDeletedQty(Double.parseDouble(String.valueOf(result[6])));
+            data.setDeletedAmount(Double.parseDouble(String.valueOf(result[7])));
+            data.setWhsCode(String.valueOf(result[9]));
+            data.setWhsQty(Double.parseDouble(String.valueOf(result[10])));
+            data.setBpCode(String.valueOf(result[12]));
+            data.setBpName(String.valueOf(result[13]));
+            String sbeCode = String.valueOf(result[14]);
+            String sbeName = String.valueOf(result[15]);
+            String targetWhs = String.valueOf(result[16]);
 
             if(sbeCode == null || sbeCode.isEmpty() || sbeCode.equals("null"))
                 data.setTarget(targetWhs);
             else
                 data.setTarget(sbeCode + " - " + sbeName);
 
-            data.setPickUser(String.valueOf(result[16]));
-            data.setPackUser(String.valueOf(result[17]));
-            data.setNotPickedReason(String.valueOf(result[18]));
+            data.setPickUser(String.valueOf(result[17]));
+            data.setPackUser(String.valueOf(result[18]));
+            data.setNotPickedReason(String.valueOf(result[19]));
 
             reportData.add(data);
         }
