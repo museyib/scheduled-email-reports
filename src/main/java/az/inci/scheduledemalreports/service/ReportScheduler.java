@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,8 @@ public class ReportScheduler
     private final PurchaseReportService purchaseReportService;
     private final RestoredPricesReportBuilder restoredPricesReportBuilder;
     private final RestoredPricesReportService restoredPricesReportService;
+    private final POSAuthSMSReportBuilder posAuthSMSReportBuilder;
+    private final POSAuthSMSReportService posAuthSMSReportService;
     private final RecipientRepository recipientRepository;
 
     @Scheduled(cron = "0 0 21 * * *")
@@ -112,5 +115,18 @@ public class ReportScheduler
         List<RestoredPriceData> reportData = restoredPricesReportService.getReportData();
         if (!reportData.isEmpty())
             mailService.sendEmail(restoredPricesReportBuilder.build(reportData), title, recipients);
+    }
+
+    @Scheduled(cron = "0 20 7 * * *")
+    public void sendReport7() throws AddressException {
+        List<Recipient> recipientList = recipientRepository.findAll();
+        Address[] recipients = new Address[1];
+        String title = "Gün ərzində POS səlahiyyət kodu üçün göndərilmiş SMS sorğuları";
+        for (Recipient recipient : recipientList) {
+            recipients[0] = new InternetAddress(recipient.getEmail());
+            List<SMSReportData> reportData = posAuthSMSReportService.getReportData(recipient.getManagerCode());
+            if (!reportData.isEmpty())
+                mailService.sendEmail(posAuthSMSReportBuilder.build(reportData), title, recipients);
+        }
     }
 }

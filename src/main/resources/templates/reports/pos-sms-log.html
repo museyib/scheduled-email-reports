@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        th, td
+        {
+            border-style: solid;
+            border-width: 1px 0;
+            padding: 0 10px;
+        }
+        .table {
+            border-collapse: collapse;
+            vertical-align: top;
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-width: 1px 0;
+            border-style: solid;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .margin-10 {
+            margin: 10px;
+        }
+
+        .d-inline
+        {
+            display: inline;
+        }
+
+        .font-normal
+        {
+            font-weight: normal;
+        }
+
+        .font-footer
+        {
+            font-weight: bolder;
+            font-size: larger;
+        }
+    </style>
+    <title>Report</title>
+</head>
+<body>
+<div class="margin-10">
+    <h2 th:text="${date}" class="d-inline"></h2>
+    <h2 class="font-normal d-inline"> tarixində POS səlahiyyət kodu üçün göndərilmiş SMS sorğuları</h2>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Telefon nömrəsi</th>
+        <th>Mesaj</th>
+        <th>Göndərilmə vaxtı</th>
+        <th>Mağaza/Təmsilçi</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item:${data}">
+        <td th:utext="${item.recipient}"></td>
+        <td th:utext="${item.message}"></td>
+        <td th:utext="${item.sendTime}"></td>
+        <td th:utext="${item.sbeCode + ' - ' + item.sbeName}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="margin-10">
+    <h2>Mağazalar üzrə SMS sayları</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Mağaza</th>
+            <th>SMS sayı</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item:${count_data.entrySet()}">
+            <td th:utext="${item.key}"></td>
+            <td class="text-right" th:utext="${item.value}"></td>
+        </tr>
+        <tr class="font-footer">
+            <td class="text-right">Cəm:</td>
+            <td class="text-right" th:text="${#aggregates.sum(count_data.values())}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
