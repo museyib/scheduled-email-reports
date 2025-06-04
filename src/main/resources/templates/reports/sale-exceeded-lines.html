@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        th, td
+        {
+            border-style: solid;
+            border-width: 1px 0;
+            padding: 0 10px;
+        }
+        .table {
+            border-collapse: collapse;
+            vertical-align: top;
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-width: 1px 0;
+            border-style: solid;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .margin-10 {
+            margin: 10px;
+        }
+
+        .d-inline
+        {
+            display: inline;
+        }
+
+        .font-normal
+        {
+            font-weight: normal;
+        }
+    </style>
+    <title>Report</title>
+</head>
+<body>
+<div class="margin-10">
+    <h2 th:text="${date}" class="d-inline"></h2>
+    <h2 class="font-normal d-inline"> tarixinə sənəd üzrə qeyd edilən limiti keçən qaimələr</h2>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Sənəd №</th>
+        <th>Tarix</th>
+        <th>Mal kodu</th>
+        <th>Mal adı</th>
+        <th>Miqdar</th>
+        <th>BP kodu</th>
+        <th>BP adı</th>
+        <th>Təmsilçi kodu</th>
+        <th>Təmsilçi adı</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item:${data}">
+        <td th:utext="${item.trxNo}"></td>
+        <td th:utext="${item.trxDate}"></td>
+        <td th:utext="${item.invCode}"></td>
+        <td th:utext="${item.invName}"></td>
+        <td class="text-right" th:utext="${item.qty}"></td>
+        <td th:utext="${item.bpCode}"></td>
+        <td th:utext="${item.bpName}"></td>
+        <td th:utext="${item.sbeCode}"></td>
+        <td th:utext="${item.sbeName}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -34,6 +34,18 @@ public class DeletedLinesFromPickingService extends AbstractService
         return getDeletedLinesFromPickingData(reportData, query);
     }
 
+    public List<DeletedLinesFromPickingData> getReportDataForWhs(String whsList)
+    {
+        List<DeletedLinesFromPickingData> reportData = new ArrayList<>();
+
+        Query query = entityManager.createNativeQuery("""
+                     declare @start datetime=cast(getdate() as date), @end datetime=getdate()
+                     exec dbo.SP_DELETED_INVENTORY_BY_DETAILS @start, @end,'*', :WHS_LIST""");
+        query.setParameter("WHS_LIST", whsList);
+
+        return getDeletedLinesFromPickingData(reportData, query);
+    }
+
     private List<DeletedLinesFromPickingData> getDeletedLinesFromPickingData(List<DeletedLinesFromPickingData> reportData, Query query) {
         List<Object[]> resultList = query.getResultList();
 

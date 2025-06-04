@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import static org.hibernate.internal.util.StringHelper.isEmpty;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,8 @@ public class ReportScheduler
     private final RestoredPricesReportService restoredPricesReportService;
     private final POSAuthSMSReportBuilder posAuthSMSReportBuilder;
     private final POSAuthSMSReportService posAuthSMSReportService;
+    private final SaleLimitExceededReportBuilder saleLimitExceededReportBuilder;
+    private final SaleLimitExceededReportService saleLimitExceededReportService;
     private final RecipientRepository recipientRepository;
 
     @Scheduled(cron = "0 0 21 * * *")
@@ -52,7 +56,8 @@ public class ReportScheduler
                 new InternetAddress("isa.abbasov@inci.az"),
                 new InternetAddress("elnur.qasimov@inci.az"),
                 new InternetAddress("ramil.quliyev@inci.az"),
-                new InternetAddress("seltenet.bagirova@inci.az")
+                new InternetAddress("seltenet.bagirova@inci.az"),
+                new InternetAddress("elcan.agayev@inci.az")
         };
         String title = "Gün ərzində yığımda azaldılmış/silinmiş mallar";
         List<DeletedLinesFromPickingData> reportData = deletedLinesFromPickingService.getReportData();
@@ -67,7 +72,14 @@ public class ReportScheduler
         String title = "Gün ərzində yığımda azaldılmış/silinmiş mallar";
         for (Recipient recipient : recipientList) {
             recipients[0] = new InternetAddress(recipient.getEmail());
-            List<DeletedLinesFromPickingData> reportData = deletedLinesFromPickingService.getReportDataForSbe(recipient.getManagerCode());
+            List<DeletedLinesFromPickingData> reportData;
+            if (!isEmpty(recipient.getManagerCode()))
+                reportData = deletedLinesFromPickingService.getReportDataForSbe(recipient.getManagerCode());
+            else if (!isEmpty(recipient.getWarehouseList()))
+                reportData = deletedLinesFromPickingService.getReportDataForWhs(recipient.getWarehouseList());
+            else
+                reportData = new ArrayList<>();
+
             if (!reportData.isEmpty())
                 mailService.sendEmail(deletedLinesReportBuilder.build(reportData), title, recipients);
         }
@@ -127,6 +139,20 @@ public class ReportScheduler
             List<SMSReportData> reportData = posAuthSMSReportService.getReportData(recipient.getManagerCode());
             if (!reportData.isEmpty())
                 mailService.sendEmail(posAuthSMSReportBuilder.build(reportData), title, recipients);
+        }
+    }
+
+    @Scheduled(cron = "0 30 21 * * *")
+    public void sendReport8() throws AddressException {
+        Address[] recipients = {
+                new InternetAddress("israil.yusifov@inci.az"),
+                new InternetAddress("isa.abbasov@inci.az"),
+                new InternetAddress("hicran.huseynov@inci.az")
+        };
+        List<SaleLimitExceededLine> reportData = saleLimitExceededReportService.getReportData();
+        if (!reportData.isEmpty()) {
+            String title = "Sənəd üzrə qeyd edilən limiti keçən qaimələr";
+            mailService.sendEmail(saleLimitExceededReportBuilder.build(reportData), title, recipients);
         }
     }
 }

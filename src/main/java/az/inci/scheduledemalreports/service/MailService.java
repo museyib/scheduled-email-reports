@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 @Service
 @Slf4j
 public class MailService
@@ -28,7 +30,7 @@ public class MailService
                     new InternetAddress("museyib.alekber@inci.az"),
 //                    new InternetAddress("isa.abbasov@inci.az"),
             };
-            String recipient = "museyib.cr@gmail.com";
+            String recipient = "elekbermuseyib@gmail.com";
 
             messagePreparator = (message) -> {
                 message.setRecipients(MimeMessage.RecipientType.TO, recipients);
@@ -39,6 +41,7 @@ public class MailService
                 message.setContent(content, "text/html; charset=utf-8");
             };
             mailSender.send(messagePreparator);
+            System.out.println("Email sent successfully: " + Arrays.toString(recipients));
         }
         catch(Exception e)
         {
