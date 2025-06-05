@@ -145,6 +145,7 @@ public class ReportScheduler
     @Scheduled(cron = "0 30 21 * * *")
     public void sendReport8() throws AddressException {
         Address[] recipients = {
+                new InternetAddress("mikayil.yusifov@inci.az"),
                 new InternetAddress("israil.yusifov@inci.az"),
                 new InternetAddress("isa.abbasov@inci.az"),
                 new InternetAddress("hicran.huseynov@inci.az")
