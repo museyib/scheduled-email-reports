@@ -10,12 +10,13 @@ import java.util.List;
 @Service
 public class PurchaseReportService extends AbstractService {
 
-    public List<PurchaseReportData> getReportData()
-    {
+    public List<PurchaseReportData> getReportData() {
         List<PurchaseReportData> reportData = new ArrayList<>();
 
         Query query = entityManager.createNativeQuery("""
                 DECLARE @date DATE = GETDATE()
+                WITH SL AS (SELECT SBE_CODE
+                            FROM dbo.FN_GET_SBE_HIERARCHY_FROM_LIST('120'))
                 SELECT INV_CODE,
                   INV_NAME,
                   INV_BRAND_CODE,
@@ -47,7 +48,11 @@ public class PurchaseReportService extends AbstractService {
                       FROM IVC_TRX
                       WHERE TRX_DATE = @date
                           AND TRX_TYPE_ID = 15
-                          AND SBE_CODE = '120'
+                          AND SBE_CODE IN
+                    (
+                        SELECT SBE_CODE
+                        FROM SL
+                    )
                       GROUP BY INV_CODE
                       ) IT_1
                   JOIN (
@@ -63,13 +68,21 @@ public class PurchaseReportService extends AbstractService {
                           FROM IVC_TRX
                           WHERE TRX_DATE < @date
                               AND TRX_TYPE_ID = 15
-                              AND SBE_CODE = '120'
+                              AND SBE_CODE IN
+                        (
+                            SELECT SBE_CODE
+                            FROM SL
+                        )
                           ) IT_L
                       JOIN IVC_TRX IT
                           ON IT_L.TRX_DATE = IT.TRX_DATE
                               AND IT_L.INV_CODE = IT.INV_CODE
                               AND IT.TRX_TYPE_ID = 15
-                              AND IT.SBE_CODE = '120'
+                              AND IT.SBE_CODE IN
+                        (
+                            SELECT SBE_CODE
+                            FROM SL
+                        )
                       GROUP BY IT.INV_CODE,
                           IT_L.TRX_DATE,
                           IT.INV_NAME

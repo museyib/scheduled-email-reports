@@ -35,6 +35,10 @@ public class ReportScheduler
     private final SaleLimitExceededReportBuilder saleLimitExceededReportBuilder;
     private final SaleLimitExceededReportService saleLimitExceededReportService;
     private final RecipientRepository recipientRepository;
+    private final InternalPurchaseReportBuilder internalPurchaseReportBuilder;
+    private final InternalPurchaseReportService internalPurchaseReportService;
+    private final ExternalPurchaseReportBuilder externalPurchaseReportBuilder;
+    private final ExternalPurchaseReportService externalPurchaseReportService;
 
     @Scheduled(cron = "0 0 21 * * *")
     public void sendReport() throws AddressException
@@ -154,6 +158,34 @@ public class ReportScheduler
         if (!reportData.isEmpty()) {
             String title = "Sənəd üzrə qeyd edilən limiti keçən qaimələr";
             mailService.sendEmail(saleLimitExceededReportBuilder.build(reportData), title, recipients);
+        }
+    }
+
+    @Scheduled(cron = "0 40 21 * * *")
+    public void sendReport9() throws AddressException {
+        Address[] recipients = {
+                new InternetAddress("mikayil.yusifov@inci.az"),
+                new InternetAddress("isa.abbasov@inci.az"),
+                new InternetAddress("hicran.huseynov@inci.az"),
+                new InternetAddress("babek.shukurov@inci.az")
+        };
+        List<InternalPurchaseReportData> reportData = internalPurchaseReportService.getReportData();
+        if (!reportData.isEmpty()) {
+            String title = "Günlük daxili alış";
+            mailService.sendEmail(internalPurchaseReportBuilder.build(reportData), title, recipients);
+        }
+    }
+
+    @Scheduled(cron = "0 50 21 * * *")
+    public void sendReport10() throws AddressException {
+        Address[] recipients = {
+                new InternetAddress("mikayil.yusifov@inci.az"),
+                new InternetAddress("isa.abbasov@inci.az")
+        };
+        List<InternalPurchaseReportData> reportData = externalPurchaseReportService.getReportData();
+        if (!reportData.isEmpty()) {
+            String title = "Günlük xarici alış";
+            mailService.sendEmail(externalPurchaseReportBuilder.build(reportData), title, recipients);
         }
     }
 }
