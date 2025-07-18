@@ -26,9 +26,9 @@ public class ExternalPurchaseReportService extends AbstractService {
                 FROM IVC_TRX IT
                      JOIN INV_MASTER IM ON IT.INV_CODE = IM.INV_CODE
                      JOIN BP_MASTER BM ON IT.BP_CODE = BM.BP_CODE
-                     JOIN dbo.FN_GET_SBE_HIERARCHY_FROM_LIST('100') SL ON IT.SBE_CODE = SL.SBE_CODE
                 WHERE TRX_DATE = @date
                       AND TRX_TYPE_ID = 15
+                      AND IT.SBE_CODE = '100'
                 ORDER BY IT.SBE_CODE, IT.TRX_NO;""");
 
         List<Object[]> list = query.getResultList();
