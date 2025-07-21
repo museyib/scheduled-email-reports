@@ -16,4 +16,5 @@ public class InternalPurchaseReportData implements ReportData {
     private String sbeCode;
     private String sbeName;
     private String trxNo;
+    private String description;
 }

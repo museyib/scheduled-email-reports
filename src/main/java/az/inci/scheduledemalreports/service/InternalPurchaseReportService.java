@@ -19,19 +19,21 @@ public class InternalPurchaseReportService extends AbstractService {
                        IM.INV_BRAND_CODE,
                        QTY,
                        UNIT_PRICE_OPR,
-                       AMOUNT_OPR,
+                       IT.AMOUNT_OPR,
                        IT.BP_CODE,
                        BM.BP_NAME,
                        ISNULL(BM.PHONE1, '') + ISNULL('; ' + BM.PHONE2, '') + ISNULL('; ' + BM.PHONE3, '') + ISNULL('; ' + BM.PHONE4, ''),
                        IT.SBE_CODE,
                        SL.SBE_NAME,
-                       IT.TRX_NO
+                       IT.TRX_NO,
+                       AD.DOC_DESC
                 FROM IVC_TRX IT
-                     JOIN INV_MASTER IM ON IT.INV_CODE = IM.INV_CODE
-                     JOIN BP_MASTER BM ON IT.BP_CODE = BM.BP_CODE
-                     JOIN dbo.FN_GET_SBE_HIERARCHY_FROM_LIST('120') SL ON IT.SBE_CODE = SL.SBE_CODE
-                WHERE TRX_DATE = @date
-                      AND TRX_TYPE_ID = 15
+                    JOIN INV_MASTER IM ON IT.INV_CODE = IM.INV_CODE
+                    JOIN BP_MASTER BM ON IT.BP_CODE = BM.BP_CODE
+                    JOIN ACC_DOC AD ON IT.TRX_NO = AD.TRX_NO
+                    JOIN dbo.FN_GET_SBE_HIERARCHY_FROM_LIST('120') SL ON IT.SBE_CODE = SL.SBE_CODE
+                WHERE IT.TRX_DATE = @date
+                      AND IT.TRX_TYPE_ID = 15
                 ORDER BY IT.SBE_CODE, IT.TRX_NO;""");
 
         List<Object[]> list = query.getResultList();
@@ -49,6 +51,7 @@ public class InternalPurchaseReportService extends AbstractService {
             data.setSbeCode((String) row[9]);
             data.setSbeName((String) row[10]);
             data.setTrxNo((String) row[11]);
+            data.setDescription((String) row[12]);
             reportData.add(data);
         }
         return reportData;
