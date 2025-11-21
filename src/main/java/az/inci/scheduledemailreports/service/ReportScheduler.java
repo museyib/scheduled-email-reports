@@ -60,7 +60,7 @@ public class ReportScheduler
                 new InternetAddress("isa.abbasov@inci.az"),
                 new InternetAddress("elnur.qasimov@inci.az"),
                 new InternetAddress("ramil.quliyev@inci.az"),
-                new InternetAddress("seltenet.bagirova@inci.az"),
+//                new InternetAddress("seltenet.bagirova@inci.az"),
                 new InternetAddress("elcan.agayev@inci.az")
         };
         String title = "Gün ərzində yığımda azaldılmış/silinmiş mallar";
