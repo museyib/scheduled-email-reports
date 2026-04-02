@@ -37,7 +37,7 @@ public class MailService
                 message.setContent(content, "text/html; charset=utf-8");
             };
             mailSender.send(messagePreparator);
-            System.out.println("Email sent successfully: " + Arrays.toString(recipients));
+            log.info("Email sent successfully: " + Arrays.toString(recipients));
         }
         catch(Exception e)
         {
