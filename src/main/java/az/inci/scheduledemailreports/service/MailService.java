@@ -26,14 +26,11 @@ public class MailService
         MimeMessagePreparator messagePreparator;
         try
         {
-            Address[] recipientsCC = {
-                    new InternetAddress("museyib.alekber@inci.az")
-            };
-            String recipient = "elekbermuseyib@gmail.com";
+//            Address[] recipientsCC = {new InternetAddress("museyib.alekber@inci.az")};
 
             messagePreparator = (message) -> {
                 message.setRecipients(MimeMessage.RecipientType.TO, recipients);
-                message.setRecipients(MimeMessage.RecipientType.CC, recipientsCC);
+//                message.setRecipients(MimeMessage.RecipientType.CC, recipientsCC);
                 message.setSubject(title, "UTF-8");
                 message.setFrom("Inci Report Center <report@inci.az>");
                 message.setSender(new InternetAddress("report@inci.az"));
